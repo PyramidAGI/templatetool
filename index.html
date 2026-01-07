@@ -104,9 +104,16 @@
         }
 
         .templates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            position: relative;
+        }
+
+        .grid-sizer,
+        .template-card {
+            width: calc(33.333% - 16px);
+        }
+
+        .template-card {
+            margin-bottom: 25px;
         }
 
         .template-card {
@@ -748,8 +755,9 @@
                 font-size: 2rem;
             }
             
-            .templates-grid {
-                grid-template-columns: 1fr;
+            .grid-sizer,
+            .template-card {
+                width: 100%;
             }
             
             .modal {
@@ -764,6 +772,13 @@
 
             .instances-grid-header {
                 display: none;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .grid-sizer,
+            .template-card {
+                width: calc(50% - 12px);
             }
         }
     </style>
@@ -818,6 +833,7 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script>
         let templates = [];
         let currentCategory = 'All';
@@ -826,6 +842,7 @@
         let currentTab = 'form';
         let currentUser = null;
         let recentInstances = [];
+        let masonryInstance = null;
 
         // Check authentication and load user info
         async function checkAuth() {
@@ -982,6 +999,7 @@
 
             container.innerHTML = `
                 <div class="templates-grid">
+                    <div class="grid-sizer"></div>
                     ${filtered.map(template => `
                         <div class="template-card" 
                              style="--card-color: ${template.color}"
@@ -1002,6 +1020,19 @@
                     `).join('')}
                 </div>
             `;
+
+            if (masonryInstance) {
+                masonryInstance.destroy();
+                masonryInstance = null;
+            }
+
+            const grid = container.querySelector('.templates-grid');
+            masonryInstance = new Masonry(grid, {
+                itemSelector: '.template-card',
+                columnWidth: '.grid-sizer',
+                percentPosition: true,
+                gutter: 25
+            });
         }
 
         // Open template detail modal
