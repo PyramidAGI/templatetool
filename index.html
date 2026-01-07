@@ -479,6 +479,48 @@
             border-color: #6366f1;
         }
 
+        /* Main Tabs */
+        .main-tabs {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 8px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+
+        .main-tab {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .main-tab:hover {
+            color: #374151;
+            background: #f3f4f6;
+        }
+
+        .main-tab.active {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .main-tab-panel {
+            display: none;
+        }
+
+        .main-tab-panel.active {
+            display: block;
+        }
+
         /* Tabs */
         .modal-tabs {
             display: flex;
@@ -776,29 +818,42 @@
             <p>Choose a template to kickstart your next project</p>
         </header>
 
-        <section class="recent-section" id="recentSection">
-            <div class="section-header">
-                <h2>🕒 Recent Entries</h2>
-                <span id="recentCount"></span>
-            </div>
-            <div id="recentInstancesContainer">
+        <div class="main-tabs" role="tablist" aria-label="Dashboard tabs">
+            <button class="main-tab active" type="button" role="tab" aria-selected="true" aria-controls="templatesPanel" id="templatesTab" onclick="switchMainTab('templates')">
+                📁 Templates
+            </button>
+            <button class="main-tab" type="button" role="tab" aria-selected="false" aria-controls="recentPanel" id="recentTab" onclick="switchMainTab('recent')">
+                🕒 Recent Entries
+            </button>
+        </div>
+
+        <section class="main-tab-panel active" id="templatesPanel" role="tabpanel" aria-labelledby="templatesTab">
+            <nav class="categories-nav" id="categoriesNav">
+                <!-- Categories will be populated here -->
+            </nav>
+
+            <div id="templatesContainer">
                 <div class="loading">
                     <div class="loading-spinner"></div>
-                    <p>Loading recent entries...</p>
+                    <p>Loading templates...</p>
                 </div>
             </div>
         </section>
 
-        <nav class="categories-nav" id="categoriesNav">
-            <!-- Categories will be populated here -->
-        </nav>
-
-        <div id="templatesContainer">
-            <div class="loading">
-                <div class="loading-spinner"></div>
-                <p>Loading templates...</p>
-            </div>
-        </div>
+        <section class="main-tab-panel" id="recentPanel" role="tabpanel" aria-labelledby="recentTab">
+            <section class="recent-section" id="recentSection">
+                <div class="section-header">
+                    <h2>🕒 Recent Entries</h2>
+                    <span id="recentCount"></span>
+                </div>
+                <div id="recentInstancesContainer">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Loading recent entries...</p>
+                    </div>
+                </div>
+            </section>
+        </section>
     </div>
 
     <!-- Template Detail Modal -->
@@ -821,6 +876,7 @@
         let currentTemplate = null;
         let currentInstance = null;
         let currentTab = 'form';
+        let currentMainTab = 'templates';
         let currentUser = null;
         let recentInstances = [];
 
@@ -932,6 +988,23 @@
                     `).join('')}
                 </div>
             `;
+        }
+
+        function switchMainTab(tab) {
+            currentMainTab = tab;
+            document.querySelectorAll('.main-tab').forEach(button => {
+                button.classList.remove('active');
+                button.setAttribute('aria-selected', 'false');
+            });
+            document.querySelectorAll('.main-tab-panel').forEach(panel => panel.classList.remove('active'));
+
+            const tabButton = document.getElementById(`${tab}Tab`);
+            const tabPanel = document.getElementById(`${tab}Panel`);
+            if (tabButton && tabPanel) {
+                tabButton.classList.add('active');
+                tabButton.setAttribute('aria-selected', 'true');
+                tabPanel.classList.add('active');
+            }
         }
 
         // Get unique categories
