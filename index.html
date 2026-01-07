@@ -678,49 +678,60 @@
 
         .instances-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
+            gap: 12px;
         }
 
-        .instance-card {
-            background: rgba(255,255,255,0.95);
+        .instances-grid-header,
+        .instance-row {
+            display: grid;
+            grid-template-columns: minmax(220px, 2fr) minmax(160px, 1fr) minmax(180px, 1fr);
+            align-items: center;
+            column-gap: 16px;
+            padding: 14px 18px;
             border-radius: 14px;
-            padding: 18px;
+        }
+
+        .instances-grid-header {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        .instance-row {
+            background: rgba(255,255,255,0.95);
             box-shadow: 0 8px 24px rgba(0,0,0,0.12);
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid rgba(255,255,255,0.4);
         }
 
-        .instance-card:hover {
-            transform: translateY(-4px);
+        .instance-row:hover {
+            transform: translateY(-3px);
             box-shadow: 0 12px 32px rgba(0,0,0,0.18);
         }
 
-        .instance-card-header {
+        .instance-name {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .instance-card-icon {
-            font-size: 1.6rem;
-        }
-
-        .instance-card-title {
             font-weight: 600;
             color: #111827;
         }
 
-        .instance-card-meta {
-            font-size: 0.85rem;
-            color: #6b7280;
-            margin-bottom: 8px;
+        .instance-icon {
+            font-size: 1.4rem;
         }
 
-        .instance-card-time {
-            font-size: 0.8rem;
+        .instance-template {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .instance-time {
+            font-size: 0.85rem;
             color: #9ca3af;
         }
 
@@ -743,6 +754,16 @@
             
             .modal {
                 margin: 10px;
+            }
+
+            .instances-grid-header,
+            .instance-row {
+                grid-template-columns: 1fr;
+                row-gap: 6px;
+            }
+
+            .instances-grid-header {
+                display: none;
             }
         }
     </style>
@@ -897,14 +918,19 @@
             const recentList = recentInstances.slice(0, 6);
             container.innerHTML = `
                 <div class="instances-grid">
+                    <div class="instances-grid-header">
+                        <div>Name</div>
+                        <div>Template</div>
+                        <div>Last updated</div>
+                    </div>
                     ${recentList.map(instance => `
-                        <div class="instance-card" onclick="openInstanceFromDashboard(${instance.id}, ${instance.template_id})">
-                            <div class="instance-card-header">
-                                <span class="instance-card-icon">${instance.icon || '📄'}</span>
-                                <div class="instance-card-title">${escapeHtml(instance.instance_name)}</div>
+                        <div class="instance-row" onclick="openInstanceFromDashboard(${instance.id}, ${instance.template_id})">
+                            <div class="instance-name">
+                                <span class="instance-icon">${instance.icon || '📄'}</span>
+                                <span>${escapeHtml(instance.instance_name)}</span>
                             </div>
-                            <div class="instance-card-meta">${escapeHtml(instance.template_name)}</div>
-                            <div class="instance-card-time">Updated ${new Date(instance.updated_at).toLocaleString()}</div>
+                            <div class="instance-template">${escapeHtml(instance.template_name)}</div>
+                            <div class="instance-time">Updated ${new Date(instance.updated_at).toLocaleString()}</div>
                         </div>
                     `).join('')}
                 </div>
