@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .user-info {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-info span {
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .categories-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: white;
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--card-color, #667eea);
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .template-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .template-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .template-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+
+        .template-description {
+            font-size: 0.95rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .template-sections {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .template-sections-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .section-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .section-tag {
+            padding: 4px 10px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #4b5563;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+        }
+
+        .modal-header p {
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f3f4f6;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #e5e7eb;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .section-block {
+            margin-bottom: 30px;
+        }
+
+        .section-block h3 {
+            font-size: 1.1rem;
+            color: #374151;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .fields-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .fields-table th,
+        .fields-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .fields-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .fields-table td {
+            font-size: 0.95rem;
+        }
+
+        .field-type {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #e0e7ff;
+            color: #4338ca;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .field-required {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .field-optional {
+            color: #9ca3af;
+        }
+
+        .json-preview {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .json-toggle {
+            background: #f3f4f6;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #4b5563;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+
+        .json-toggle:hover {
+            background: #e5e7eb;
+        }
+
+        /* Form Builder Styles */
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .form-section h3 {
+            font-size: 1.1rem;
+            color: #374151;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+            margin-left: 4px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        .instance-name-input {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #eef2ff;
+            border-radius: 12px;
+        }
+
+        .instance-name-input label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4338ca;
+        }
+
+        .instance-name-input input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #c7d2fe;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .instance-name-input input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        /* Tabs */
+        .modal-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .modal-tab {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .modal-tab:hover {
+            color: #374151;
+        }
+
+        .modal-tab.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Saved Instances List */
+        .instances-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .instance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .instance-item:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .instance-info {
+            flex: 1;
+        }
+
+        .instance-info h4 {
+            font-size: 1rem;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .instance-info span {
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+
+        .instance-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .instance-actions button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .btn-edit:hover {
+            background: #c7d2fe;
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-delete:hover {
+            background: #fecaca;
+        }
+
+        .no-instances {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+        }
+
+        .no-instances p {
+            margin-bottom: 15px;
+        }
+
+        /* Success/Error Messages */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast-success {
+            background: #10b981;
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 640px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span id="userDisplay"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+            <h1>📋 Template Tool</h1>
+            <p>Choose a template to kickstart your next project</p>
+        </header>
+
+        <nav class="categories-nav" id="categoriesNav">
+            <!-- Categories will be populated here -->
+        </nav>
+
+        <div id="templatesContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading templates...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <h2 id="modalTitle"></h2>
+                <p id="modalDescription"></p>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Template details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let templates = [];
+        let currentCategory = 'All';
+        let currentTemplate = null;
+        let currentInstance = null;
+        let currentTab = 'form';
+        let currentUser = null;
+
+        // Check authentication and load user info
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user');
+                if (response.ok) {
+                    currentUser = await response.json();
+                    showUserInfo(currentUser);
+                } else {
+                    // Not authenticated, redirect to login
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // Display user information
+        function showUserInfo(user) {
+            const userInfo = document.getElementById('userInfo');
+            const userDisplay = document.getElementById('userDisplay');
+            userDisplay.textContent = `Hello, ${user.username}!`;
+            userInfo.style.display = 'flex';
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await fetch('/logout', { method: 'POST' });
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Force redirect even if logout request fails
+                window.location.href = '/login';
+            }
+        }
+
+        // Fetch templates from API
+        async function fetchTemplates() {
+            try {
+                const response = await fetch('/api/templates');
+                templates = await response.json();
+                renderCategories();
+                renderTemplates();
+            } catch (error) {
+                console.error('Error fetching templates:', error);
+                document.getElementById('templatesContainer').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Error loading templates</h3>
+                        <p>Please make sure the server is running and you're logged in.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Get unique categories
+        function getCategories() {
+            const categories = [...new Set(templates.map(t => t.category))];
+            return ['All', ...categories.sort()];
+        }
+
+        // Render category navigation
+        function renderCategories() {
+            const nav = document.getElementById('categoriesNav');
+            const categories = getCategories();
+            
+            nav.innerHTML = categories.map(cat => `
+                <button class="category-btn ${cat === currentCategory ? 'active' : ''}" 
+                        onclick="filterByCategory('${cat}')">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        // Filter templates by category
+        function filterByCategory(category) {
+            currentCategory = category;
+            renderCategories();
+            renderTemplates();
+        }
+
+        // Render template cards
+        function renderTemplates() {
+            const container = document.getElementById('templatesContainer');
+            const filtered = currentCategory === 'All' 
+                ? templates 
+                : templates.filter(t => t.category === currentCategory);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No templates found</h3>
+                        <p>Try selecting a different category.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="templates-grid">
+                    ${filtered.map(template => `
+                        <div class="template-card" 
+                             style="--card-color: ${template.color}"
+                             onclick="openTemplateModal(${template.id})">
+                            <div class="template-icon">${template.icon}</div>
+                            <span class="template-category">${template.category}</span>
+                            <h3 class="template-name">${template.name}</h3>
+                            <p class="template-description">${template.description}</p>
+                            <div class="template-sections">
+                                <div class="template-sections-label">Sections included:</div>
+                                <div class="section-tags">
+                                    ${template.template_json.sections.map(s => `
+                                        <span class="section-tag">${s.name}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Open template detail modal
+        async function openTemplateModal(templateId) {
+            currentTemplate = templates.find(t => t.id === templateId);
+            currentInstance = null;
+            currentTab = 'form';
+            
+            if (!currentTemplate) return;
+
+            document.getElementById('modalTitle').innerHTML = `
+                <span>${currentTemplate.icon}</span>
+                ${currentTemplate.name}
+            `;
+            document.getElementById('modalDescription').textContent = currentTemplate.description;
+
+            await renderModalContent();
+
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Render modal content with tabs
+        async function renderModalContent() {
+            const body = document.getElementById('modalBody');
+            
+            // Fetch saved instances
+            let instances = [];
+            try {
+                const response = await fetch(`/api/templates/${currentTemplate.id}/instances`);
+                instances = await response.json();
+            } catch (error) {
+                console.error('Error fetching instances:', error);
+            }
+
+            body.innerHTML = `
+                <div class="modal-tabs">
+                    <button class="modal-tab ${currentTab === 'form' ? 'active' : ''}" onclick="switchTab('form')">
+                        📝 Fill Out Form
+                    </button>
+                    <button class="modal-tab ${currentTab === 'saved' ? 'active' : ''}" onclick="switchTab('saved')">
+                        💾 Saved (${instances.length})
+                    </button>
+                    <button class="modal-tab ${currentTab === 'schema' ? 'active' : ''}" onclick="switchTab('schema')">
+                        📋 Schema
+                    </button>
+                </div>
+
+                <div id="tabForm" class="tab-content ${currentTab === 'form' ? 'active' : ''}">
+                    ${renderFormBuilder()}
+                </div>
+
+                <div id="tabSaved" class="tab-content ${currentTab === 'saved' ? 'active' : ''}">
+                    ${renderSavedInstances(instances)}
+                </div>
+
+                <div id="tabSchema" class="tab-content ${currentTab === 'schema' ? 'active' : ''}">
+                    ${renderSchema()}
+                </div>
+            `;
+        }
+
+        // Switch tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            document.querySelector(`.modal-tab:nth-child(${tab === 'form' ? 1 : tab === 'saved' ? 2 : 3})`).classList.add('active');
+            document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+        }
+
+        // Render form builder
+        function renderFormBuilder() {
+            const data = currentInstance ? currentInstance.data_json : {};
+            const instanceName = currentInstance ? currentInstance.instance_name : '';
+
+            return `
+                <form id="templateForm" onsubmit="saveInstance(event)">
+                    <div class="instance-name-input">
+                        <label for="instanceName">📌 Name this entry</label>
+                        <input type="text" id="instanceName" name="instanceName" 
+                               placeholder="e.g., Q1 Marketing Campaign, Website Redesign Project..."
+                               value="${escapeHtml(instanceName)}" required>
+                    </div>
+
+                    ${currentTemplate.template_json.sections.map(section => `
+                        <div class="form-section">
+                            <h3>${section.name}</h3>
+                            ${section.fields.map(field => renderFormField(field, section.name, data)).join('')}
+                        </div>
+                    `).join('')}
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            ${currentInstance ? '💾 Update' : '✨ Save'}
+                        </button>
+                        ${currentInstance ? `
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                                ➕ New Entry
+                            </button>
+                        ` : ''}
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // Render a single form field
+        function renderFormField(field, sectionName, data) {
+            const fieldId = `field_${sectionName}_${field.name}`.replace(/\s+/g, '_');
+            const value = data[sectionName] ? (data[sectionName][field.name] || '') : '';
+
+            let input = '';
+            switch (field.type) {
+                case 'textarea':
+                    input = `<textarea id="${fieldId}" name="${fieldId}" 
+                                ${field.required ? 'required' : ''}
+                                placeholder="Enter ${field.name.toLowerCase()}...">${escapeHtml(value)}</textarea>`;
+                    break;
+                case 'select':
+                    input = `<select id="${fieldId}" name="${fieldId}" ${field.required ? 'required' : ''}>
+                        <option value="">Select ${field.name}...</option>
+                        ${field.options.map(opt => `
+                            <option value="${opt}" ${value === opt ? 'selected' : ''}>${opt}</option>
+                        `).join('')}
+                    </select>`;
+                    break;
+                case 'number':
+                    input = `<input type="number" id="${fieldId}" name="${fieldId}" 
+                                value="${escapeHtml(value)}"
+                                ${field.required ? 'required' : ''}
+                                placeholder="Enter ${field.name.toLowerCase()}...">`;
+                    break;
+                case 'date':
+                    input = `<input type="date" id="${fieldId}" name="${fieldId}" 
+                                value="${escapeHtml(value)}"
+                                ${field.required ? 'required' : ''}>`;
+                    break;
+                default:
+                    input = `<input type="text" id="${fieldId}" name="${fieldId}" 
+                                value="${escapeHtml(value)}"
+                                ${field.required ? 'required' : ''}
+                                placeholder="Enter ${field.name.toLowerCase()}...">`;
+            }
+
+            return `
+                <div class="form-group">
+                    <label for="${fieldId}">
+                        ${field.name}
+                        ${field.required ? '<span class="required">*</span>' : ''}
+                    </label>
+                    ${input}
+                </div>
+            `;
+        }
+
+        // Render saved instances list
+        function renderSavedInstances(instances) {
+            if (instances.length === 0) {
+                return `
+                    <div class="no-instances">
+                        <p>No saved entries yet</p>
+                        <button class="btn btn-primary" onclick="switchTab('form')">
+                            ✨ Create your first entry
+                        </button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="instances-list">
+                    ${instances.map(instance => `
+                        <div class="instance-item">
+                            <div class="instance-info">
+                                <h4>${escapeHtml(instance.instance_name)}</h4>
+                                <span>Last updated: ${new Date(instance.updated_at).toLocaleString()}</span>
+                            </div>
+                            <div class="instance-actions">
+                                <button class="btn-edit" onclick="editInstance(${instance.id})">
+                                    ✏️ Edit
+                                </button>
+                                <button class="btn-delete" onclick="deleteInstance(${instance.id})">
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Render schema view
+        function renderSchema() {
+            return `
+                ${currentTemplate.template_json.sections.map(section => `
+                    <div class="section-block">
+                        <h3>${section.name}</h3>
+                        <table class="fields-table">
+                            <thead>
+                                <tr>
+                                    <th>Field Name</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Options</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${section.fields.map(field => `
+                                    <tr>
+                                        <td>${field.name}</td>
+                                        <td><span class="field-type">${field.type}</span></td>
+                                        <td class="${field.required ? 'field-required' : 'field-optional'}">
+                                            ${field.required ? 'Yes' : 'No'}
+                                        </td>
+                                        <td>${field.options ? field.options.join(', ') : '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `).join('')}
+                
+                <button class="json-toggle" onclick="toggleJson()">View Raw JSON</button>
+                <div id="jsonPreview" style="display: none;">
+                    <pre class="json-preview">${JSON.stringify(currentTemplate.template_json, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        // Save instance
+        async function saveInstance(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('templateForm');
+            const formData = new FormData(form);
+            const instanceName = formData.get('instanceName');
+
+            // Build data structure
+            const dataJson = {};
+            currentTemplate.template_json.sections.forEach(section => {
+                dataJson[section.name] = {};
+                section.fields.forEach(field => {
+                    const fieldId = `field_${section.name}_${field.name}`.replace(/\s+/g, '_');
+                    dataJson[section.name][field.name] = formData.get(fieldId) || '';
+                });
+            });
+
+            try {
+                let response;
+                if (currentInstance) {
+                    // Update existing
+                    response = await fetch(`/api/instances/${currentInstance.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            instance_name: instanceName,
+                            data_json: dataJson
+                        })
+                    });
+                } else {
+                    // Create new
+                    response = await fetch(`/api/templates/${currentTemplate.id}/instances`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            instance_name: instanceName,
+                            data_json: dataJson
+                        })
+                    });
+                }
+
+                if (response.ok) {
+                    showToast(currentInstance ? 'Entry updated successfully!' : 'Entry saved successfully!', 'success');
+                    currentInstance = null;
+                    currentTab = 'saved';
+                    await renderModalContent();
+                } else {
+                    showToast('Error saving entry', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving instance:', error);
+                showToast('Error saving entry', 'error');
+            }
+        }
+
+        // Edit instance
+        async function editInstance(instanceId) {
+            try {
+                const response = await fetch(`/api/instances/${instanceId}`);
+                currentInstance = await response.json();
+                currentTab = 'form';
+                await renderModalContent();
+            } catch (error) {
+                console.error('Error loading instance:', error);
+                showToast('Error loading entry', 'error');
+            }
+        }
+
+        // Delete instance
+        async function deleteInstance(instanceId) {
+            if (!confirm('Are you sure you want to delete this entry?')) return;
+
+            try {
+                const response = await fetch(`/api/instances/${instanceId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast('Entry deleted successfully!', 'success');
+                    await renderModalContent();
+                } else {
+                    showToast('Error deleting entry', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting instance:', error);
+                showToast('Error deleting entry', 'error');
+            }
+        }
+
+        // Reset form for new entry
+        function resetForm() {
+            currentInstance = null;
+            renderModalContent();
+        }
+
+        // Toggle JSON preview
+        function toggleJson() {
+            const preview = document.getElementById('jsonPreview');
+            const btn = document.querySelector('.json-toggle');
+            if (preview.style.display === 'none') {
+                preview.style.display = 'block';
+                btn.textContent = 'Hide Raw JSON';
+            } else {
+                preview.style.display = 'none';
+                btn.textContent = 'View Raw JSON';
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            currentInstance = null;
+        }
+
+        // Close modal on overlay click
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modalOverlay')) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        async function init() {
+            await checkAuth();
+            fetchTemplates();
+        }
+
+        init();
+    </script>
+</body>
+</html>
