@@ -660,6 +660,78 @@
             margin-bottom: 10px;
         }
 
+        .recent-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .instances-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .instance-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .instance-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+        }
+
+        .instance-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .instance-card-icon {
+            font-size: 1.6rem;
+        }
+
+        .instance-card-title {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .instance-card-meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .instance-card-time {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .instances-empty {
+            background: rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+        }
+
         @media (max-width: 640px) {
             header h1 {
                 font-size: 2rem;
@@ -685,6 +757,19 @@
             <h1>📋 Template Tool</h1>
             <p>Choose a template to kickstart your next project</p>
         </header>
+
+        <section class="recent-section" id="recentSection">
+            <div class="section-header">
+                <h2>🕒 Recent Entries</h2>
+                <span id="recentCount"></span>
+            </div>
+            <div id="recentInstancesContainer">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading recent entries...</p>
+                </div>
+            </div>
+        </section>
 
         <nav class="categories-nav" id="categoriesNav">
             <!-- Categories will be populated here -->
@@ -719,6 +804,7 @@
         let currentInstance = null;
         let currentTab = 'form';
         let currentUser = null;
+        let recentInstances = [];
 
         // Check authentication and load user info
         async function checkAuth() {
@@ -773,6 +859,56 @@
                     </div>
                 `;
             }
+        }
+
+        // Fetch recent instances for dashboard
+        async function fetchRecentInstances() {
+            const container = document.getElementById('recentInstancesContainer');
+            try {
+                const response = await fetch('/api/instances');
+                recentInstances = await response.json();
+                renderRecentInstances();
+            } catch (error) {
+                console.error('Error fetching recent instances:', error);
+                container.innerHTML = `
+                    <div class="instances-empty">
+                        <h3>Unable to load recent entries</h3>
+                        <p>Please make sure you're logged in and try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderRecentInstances() {
+            const container = document.getElementById('recentInstancesContainer');
+            const count = document.getElementById('recentCount');
+            count.textContent = recentInstances.length ? `${recentInstances.length} total` : '';
+
+            if (recentInstances.length === 0) {
+                container.innerHTML = `
+                    <div class="instances-empty">
+                        <h3>No saved entries yet</h3>
+                        <p>Save your first entry from a template to see it here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const recentList = recentInstances.slice(0, 6);
+            container.innerHTML = `
+                <div class="instances-grid">
+                    ${recentList.map(instance => `
+                        <div class="instance-card" onclick="openInstanceFromDashboard(${instance.id}, ${instance.template_id})">
+                            <div class="instance-card-header">
+                                <span class="instance-card-icon">${instance.icon || '📄'}</span>
+                                <div class="instance-card-title">${escapeHtml(instance.instance_name)}</div>
+                            </div>
+                            <div class="instance-card-meta">${escapeHtml(instance.template_name)}</div>
+                            <div class="instance-card-time">Updated ${new Date(instance.updated_at).toLocaleString()}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
 
         // Get unique categories
@@ -1119,6 +1255,7 @@
                     currentInstance = null;
                     currentTab = 'saved';
                     await renderModalContent();
+                    fetchRecentInstances();
                 } else {
                     showToast('Error saving entry', 'error');
                 }
@@ -1153,6 +1290,7 @@
                 if (response.ok) {
                     showToast('Entry deleted successfully!', 'success');
                     await renderModalContent();
+                    fetchRecentInstances();
                 } else {
                     showToast('Error deleting entry', 'error');
                 }
@@ -1208,6 +1346,15 @@
             currentInstance = null;
         }
 
+        async function openInstanceFromDashboard(instanceId, templateId) {
+            const matchedTemplate = templates.find(template => template.id === templateId);
+            if (matchedTemplate) {
+                currentTemplate = matchedTemplate;
+            }
+            await openTemplateModal(templateId);
+            await editInstance(instanceId);
+        }
+
         // Close modal on overlay click
         document.getElementById('modalOverlay').addEventListener('click', (e) => {
             if (e.target === document.getElementById('modalOverlay')) {
@@ -1225,7 +1372,8 @@
         // Initialize
         async function init() {
             await checkAuth();
-            fetchTemplates();
+            await fetchTemplates();
+            fetchRecentInstances();
         }
 
         init();
