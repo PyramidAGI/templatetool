@@ -141,6 +141,25 @@
             box-shadow: var(--shadow-soft);
         }
 
+        .hero-steps {
+            display: grid;
+            gap: 10px;
+            margin-top: 8px;
+            color: var(--muted);
+        }
+
+        .hero-steps strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+        }
+
         .hero-eyebrow {
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -938,6 +957,11 @@
                 <span class="hero-eyebrow">Workspace templates</span>
                 <h1>Build repeatable processes that stay consistent.</h1>
                 <p>Create, save, and reuse structured templates across teams so every project kicks off with clarity.</p>
+                <div class="hero-steps">
+                    <span><strong>Step 1.</strong> Get a loosely formulated text</span>
+                    <span><strong>Step 2.</strong> Click the 'Convert' button to convert it to a template.</span>
+                </div>
+                <button class="btn btn-primary hero-cta" type="button">Convert</button>
             </div>
         </header>
 
