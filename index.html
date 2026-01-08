@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Template Tool</title>
     <style>
+        :root {
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #0f766e;
+            --accent-strong: #0f5f59;
+            --accent-soft: rgba(15, 118, 110, 0.12);
+            --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+            --shadow-card: 0 22px 50px rgba(15, 23, 42, 0.12);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,113 +25,184 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(180deg, #f9fafb 0%, #eef2f7 100%);
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
             min-height: 100vh;
-            color: #1f2937;
+            color: var(--ink);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            filter: blur(0px);
+            opacity: 0.22;
+            z-index: -1;
+            background: radial-gradient(circle at center, rgba(20, 184, 166, 0.4), rgba(20, 184, 166, 0));
+        }
+
+        body::before {
+            top: -180px;
+            left: -120px;
+        }
+
+        body::after {
+            bottom: -220px;
+            right: -160px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 32px 20px 60px;
         }
 
         header {
-            text-align: center;
-            margin-bottom: 50px;
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            margin-bottom: 45px;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+            box-shadow: 0 12px 24px rgba(20, 184, 166, 0.3);
+        }
+
+        .brand span {
+            font-size: 1.15rem;
         }
 
         .user-info {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: flex;
+            display: none;
             align-items: center;
-            gap: 15px;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            padding: 10px 20px;
-            border-radius: 25px;
-            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.7);
+            padding: 10px 16px;
+            border-radius: 999px;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(8px);
         }
 
         .user-info span {
             font-weight: 500;
-            color: #1f2937;
+            color: var(--ink);
         }
 
         .logout-btn {
             padding: 8px 16px;
-            background: #ef4444;
+            background: #0f172a;
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 999px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             transition: all 0.2s;
         }
 
         .logout-btn:hover {
-            background: #b91c1c;
             transform: translateY(-1px);
+            background: #111827;
+        }
+
+        .hero {
+            display: grid;
+            gap: 16px;
+            text-align: left;
+            padding: 32px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(20, 184, 166, 0.02));
+            border: 1px solid rgba(15, 118, 110, 0.15);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .hero-eyebrow {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--accent);
+            font-weight: 600;
         }
 
         header h1 {
-            font-size: 3rem;
-            color: #0f172a;
-            margin-bottom: 10px;
+            font-size: clamp(2.4rem, 3vw, 3.2rem);
+            color: var(--ink);
         }
 
         header p {
-            font-size: 1.2rem;
-            color: #64748b;
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 600px;
         }
 
         .categories-nav {
             display: flex;
-            justify-content: center;
             gap: 10px;
-            margin-bottom: 40px;
+            margin-bottom: 28px;
             flex-wrap: wrap;
         }
 
         .category-btn {
-            padding: 10px 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 25px;
-            background: #ffffff;
-            color: #475569;
+            padding: 8px 18px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--muted);
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.05);
         }
 
-        .category-btn:hover, .category-btn.active {
-            background: #2563eb;
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--ink);
             color: white;
-            border-color: #2563eb;
+            border-color: var(--ink);
             transform: translateY(-2px);
         }
 
         .templates-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
         }
 
         .template-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+            background: var(--surface);
+            border-radius: 22px;
+            padding: 26px;
+            box-shadow: var(--shadow-card);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, 0.6);
         }
 
         .template-card::before {
@@ -128,51 +212,53 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--card-color, #667eea);
+            background: var(--card-color, #14b8a6);
         }
 
         .template-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.14);
+            transform: translateY(-6px);
+            box-shadow: 0 28px 60px rgba(15, 23, 42, 0.16);
         }
 
         .template-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 2.2rem;
+            margin-bottom: 14px;
         }
 
         .template-category {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 4px 12px;
-            background: #f3f4f6;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-bottom: 10px;
+            background: rgba(15, 118, 110, 0.08);
+            border-radius: 999px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 600;
         }
 
         .template-name {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #1f2937;
+            color: var(--ink);
         }
 
         .template-description {
             font-size: 0.95rem;
-            color: #6b7280;
+            color: var(--muted);
             line-height: 1.5;
         }
 
         .template-sections {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e5e7eb;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(226, 232, 240, 0.6);
         }
 
         .template-sections-label {
-            font-size: 0.8rem;
-            color: #9ca3af;
+            font-size: 0.75rem;
+            color: #94a3b8;
             margin-bottom: 8px;
         }
 
@@ -184,11 +270,11 @@
 
         .section-tag {
             padding: 4px 10px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
+            background: #f8fafc;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 999px;
             font-size: 0.75rem;
-            color: #4b5563;
+            color: #475569;
         }
 
         /* Modal Styles */
@@ -199,8 +285,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(6px);
+            background: rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(8px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -212,23 +298,24 @@
         }
 
         .modal {
-            background: white;
-            border-radius: 20px;
-            max-width: 800px;
+            background: var(--surface);
+            border-radius: 24px;
+            max-width: 860px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+            box-shadow: 0 32px 80px rgba(15, 23, 42, 0.25);
+            border: 1px solid rgba(226, 232, 240, 0.7);
         }
 
         .modal-header {
-            padding: 25px 30px;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 26px 32px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
             position: sticky;
             top: 0;
-            background: white;
-            border-radius: 20px 20px 0 0;
+            background: var(--surface);
+            border-radius: 24px 24px 0 0;
             z-index: 10;
         }
 
@@ -240,8 +327,8 @@
         }
 
         .modal-header p {
-            color: #6b7280;
-            margin-top: 5px;
+            color: var(--muted);
+            margin-top: 6px;
         }
 
         .modal-close {
@@ -249,7 +336,7 @@
             top: 20px;
             right: 20px;
             background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -274,11 +361,11 @@
         }
 
         .section-block h3 {
-            font-size: 1.1rem;
-            color: #374151;
+            font-size: 1.05rem;
+            color: #334155;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid rgba(226, 232, 240, 0.8);
         }
 
         .fields-table {
@@ -290,14 +377,14 @@
         .fields-table td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .fields-table th {
-            background: #f9fafb;
+            background: #f8fafc;
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #6b7280;
+            font-size: 0.8rem;
+            color: #64748b;
             text-transform: uppercase;
         }
 
@@ -308,9 +395,9 @@
         .field-type {
             display: inline-block;
             padding: 3px 8px;
-            background: #dbeafe;
-            color: #1d4ed8;
-            border-radius: 4px;
+            background: rgba(14, 116, 144, 0.12);
+            color: #0e7490;
+            border-radius: 6px;
             font-size: 0.8rem;
         }
 
@@ -320,7 +407,7 @@
         }
 
         .field-optional {
-            color: #9ca3af;
+            color: #94a3b8;
         }
 
         .json-preview {
@@ -336,12 +423,12 @@
 
         .json-toggle {
             background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 999px;
             cursor: pointer;
             font-size: 0.9rem;
-            color: #4b5563;
+            color: #475569;
             margin-bottom: 15px;
             transition: all 0.2s;
         }
@@ -355,16 +442,16 @@
             margin-bottom: 30px;
             padding: 20px;
             background: #f8fafc;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
         }
 
         .form-section h3 {
-            font-size: 1.1rem;
-            color: #374151;
+            font-size: 1.05rem;
+            color: #334155;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid rgba(226, 232, 240, 0.8);
         }
 
         .form-group {
@@ -375,7 +462,7 @@
             display: block;
             font-weight: 500;
             margin-bottom: 6px;
-            color: #374151;
+            color: #334155;
             font-size: 0.95rem;
         }
 
@@ -389,19 +476,20 @@
         .form-group select {
             width: 100%;
             padding: 10px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            border-radius: 10px;
             font-size: 0.95rem;
             font-family: inherit;
             transition: all 0.2s;
+            background: var(--surface);
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
         }
 
         .form-group textarea {
@@ -414,13 +502,13 @@
             gap: 12px;
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 999px;
             font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
@@ -428,20 +516,20 @@
         }
 
         .btn-primary {
-            background: #2563eb;
+            background: var(--ink);
             color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            background: #1d4ed8;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            background: #020617;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.2);
         }
 
         .btn-secondary {
             background: #f8fafc;
             color: #475569;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border);
         }
 
         .btn-secondary:hover {
@@ -461,63 +549,64 @@
         .instance-name-input {
             margin-bottom: 25px;
             padding: 20px;
-            background: #eff6ff;
-            border-radius: 12px;
-            border: 1px solid #bfdbfe;
+            background: rgba(15, 118, 110, 0.08);
+            border-radius: 14px;
+            border: 1px solid rgba(15, 118, 110, 0.2);
         }
 
         .instance-name-input label {
             display: block;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #1d4ed8;
+            color: var(--accent);
         }
 
         .instance-name-input input {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #bfdbfe;
-            border-radius: 8px;
+            border: 1px solid rgba(15, 118, 110, 0.4);
+            border-radius: 10px;
             font-size: 1rem;
         }
 
         .instance-name-input input:focus {
             outline: none;
-            border-color: #2563eb;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
         }
 
         /* Main Tabs */
         .main-tabs {
-            display: flex;
+            display: inline-flex;
             gap: 8px;
-            background: white;
+            background: var(--surface);
             padding: 8px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+            border-radius: 999px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
             margin-bottom: 24px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .main-tab {
-            flex: 1;
             border: none;
             background: transparent;
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-size: 0.95rem;
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: #6b7280;
+            color: #64748b;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .main-tab:hover {
-            color: #374151;
-            background: #f3f4f6;
+            color: #334155;
+            background: #f1f5f9;
         }
 
         .main-tab.active {
-            background: #eff6ff;
-            color: #1d4ed8;
+            background: #0f172a;
+            color: white;
         }
 
         .main-tab-panel {
@@ -531,31 +620,35 @@
         /* Tabs */
         .modal-tabs {
             display: flex;
-            gap: 0;
+            gap: 8px;
             margin-bottom: 20px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            flex-wrap: wrap;
         }
 
         .modal-tab {
-            padding: 12px 24px;
+            padding: 10px 18px;
             border: none;
             background: none;
             cursor: pointer;
-            font-size: 0.95rem;
-            color: #6b7280;
+            font-size: 0.9rem;
+            color: #64748b;
             border-bottom: 2px solid transparent;
             margin-bottom: -2px;
             transition: all 0.2s;
+            border-radius: 999px;
         }
 
         .modal-tab:hover {
-            color: #374151;
+            color: #334155;
+            background: #f1f5f9;
         }
 
         .modal-tab.active {
-            color: #2563eb;
-            border-bottom-color: #2563eb;
-            font-weight: 500;
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            font-weight: 600;
+            background: rgba(15, 118, 110, 0.08);
         }
 
         .tab-content {
@@ -579,13 +672,13 @@
             align-items: center;
             padding: 16px 20px;
             background: #f8fafc;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            border: 1px solid rgba(226, 232, 240, 0.9);
             transition: all 0.2s;
         }
 
         .instance-item:hover {
-            background: #e2e8f0;
+            background: #f1f5f9;
             border-color: #cbd5e1;
         }
 
@@ -595,13 +688,13 @@
 
         .instance-info h4 {
             font-size: 1rem;
-            color: #1f2937;
+            color: #0f172a;
             margin-bottom: 4px;
         }
 
         .instance-info span {
             font-size: 0.85rem;
-            color: #9ca3af;
+            color: #94a3b8;
         }
 
         .instance-actions {
@@ -612,20 +705,20 @@
         .instance-actions button {
             padding: 8px 12px;
             border: none;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn-edit {
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1px solid #bfdbfe;
+            background: rgba(15, 118, 110, 0.12);
+            color: var(--accent);
+            border: 1px solid rgba(15, 118, 110, 0.25);
         }
 
         .btn-edit:hover {
-            background: #dbeafe;
+            background: rgba(15, 118, 110, 0.2);
         }
 
         .btn-delete {
@@ -641,7 +734,7 @@
         .no-instances {
             text-align: center;
             padding: 40px;
-            color: #9ca3af;
+            color: #94a3b8;
         }
 
         .no-instances p {
@@ -654,7 +747,7 @@
             bottom: 20px;
             right: 20px;
             padding: 16px 24px;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             font-weight: 500;
             z-index: 2000;
@@ -689,8 +782,8 @@
         .loading-spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid rgba(37, 99, 235, 0.15);
-            border-top-color: #2563eb;
+            border: 4px solid rgba(15, 118, 110, 0.15);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
@@ -707,8 +800,9 @@
         }
 
         .empty-state h3 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 10px;
+            color: #0f172a;
         }
 
         .recent-section {
@@ -724,7 +818,7 @@
         }
 
         .section-header h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
 
         .instances-grid {
@@ -739,29 +833,29 @@
             align-items: center;
             column-gap: 16px;
             padding: 14px 18px;
-            border-radius: 14px;
+            border-radius: 16px;
         }
 
         .instances-grid-header {
-            background: #e2e8f0;
-            color: #475569;
-            font-size: 0.85rem;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.12em;
             font-weight: 600;
         }
 
         .instance-row {
             background: #ffffff;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
             cursor: pointer;
             transition: all 0.2s ease;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(226, 232, 240, 0.9);
         }
 
         .instance-row:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16);
             border-color: #cbd5e1;
         }
 
@@ -770,37 +864,42 @@
             align-items: center;
             gap: 10px;
             font-weight: 600;
-            color: #111827;
+            color: #0f172a;
         }
 
         .instance-icon {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
 
         .instance-template {
             font-size: 0.9rem;
-            color: #6b7280;
+            color: #64748b;
         }
 
         .instance-time {
             font-size: 0.85rem;
-            color: #9ca3af;
+            color: #94a3b8;
         }
 
         .instances-empty {
             background: #ffffff;
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 30px;
             text-align: center;
             color: #64748b;
-            border: 1px dashed #e2e8f0;
+            border: 1px dashed rgba(148, 163, 184, 0.5);
         }
 
         @media (max-width: 640px) {
             header h1 {
                 font-size: 2rem;
             }
-            
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
             .modal {
                 margin: 10px;
             }
@@ -814,6 +913,10 @@
             .instances-grid-header {
                 display: none;
             }
+
+            .form-actions {
+                flex-direction: column;
+            }
         }
 
     </style>
@@ -821,20 +924,29 @@
 <body>
     <div class="container">
         <header>
-            <div class="user-info" id="userInfo" style="display: none;">
-                <span id="userDisplay"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+            <div class="top-bar">
+                <div class="brand">
+                    <span class="brand-mark"></span>
+                    <span>Template Tool</span>
+                </div>
+                <div class="user-info" id="userInfo">
+                    <span id="userDisplay"></span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
             </div>
-            <h1>📋 Template Tool</h1>
-            <p>Choose a template to kickstart your next project</p>
+            <div class="hero">
+                <span class="hero-eyebrow">Workspace templates</span>
+                <h1>Build repeatable processes that stay consistent.</h1>
+                <p>Create, save, and reuse structured templates across teams so every project kicks off with clarity.</p>
+            </div>
         </header>
 
         <div class="main-tabs" role="tablist" aria-label="Dashboard tabs">
             <button class="main-tab active" type="button" role="tab" aria-selected="true" aria-controls="templatesPanel" id="templatesTab" onclick="switchMainTab('templates')">
-                📁 Templates
+                Templates
             </button>
             <button class="main-tab" type="button" role="tab" aria-selected="false" aria-controls="recentPanel" id="recentTab" onclick="switchMainTab('recent')">
-                🕒 Recent Entries
+                Recent Entries
             </button>
         </div>
 
@@ -854,7 +966,7 @@
         <section class="main-tab-panel" id="recentPanel" role="tabpanel" aria-labelledby="recentTab">
             <section class="recent-section" id="recentSection">
                 <div class="section-header">
-                    <h2>🕒 Recent Entries</h2>
+                    <h2>Recent Entries</h2>
                     <span id="recentCount"></span>
                 </div>
                 <div id="recentInstancesContainer">
@@ -1028,9 +1140,9 @@
         function renderCategories() {
             const nav = document.getElementById('categoriesNav');
             const categories = getCategories();
-            
+
             nav.innerHTML = categories.map(cat => `
-                <button class="category-btn ${cat === currentCategory ? 'active' : ''}" 
+                <button class="category-btn ${cat === currentCategory ? 'active' : ''}"
                         onclick="filterByCategory('${cat}')">
                     ${cat}
                 </button>
@@ -1047,8 +1159,8 @@
         // Render template cards
         function renderTemplates() {
             const container = document.getElementById('templatesContainer');
-            const filtered = currentCategory === 'All' 
-                ? templates 
+            const filtered = currentCategory === 'All'
+                ? templates
                 : templates.filter(t => t.category === currentCategory);
 
             if (filtered.length === 0) {
@@ -1064,7 +1176,7 @@
             container.innerHTML = `
                 <div class="templates-grid">
                     ${filtered.map(template => `
-                        <div class="template-card" 
+                        <div class="template-card"
                              style="--card-color: ${template.color}"
                              onclick="openTemplateModal(${template.id})">
                             <div class="template-icon">${template.icon}</div>
@@ -1090,7 +1202,7 @@
             currentTemplate = templates.find(t => t.id === templateId);
             currentInstance = null;
             currentTab = 'form';
-            
+
             if (!currentTemplate) return;
 
             document.getElementById('modalTitle').innerHTML = `
@@ -1108,7 +1220,7 @@
         // Render modal content with tabs
         async function renderModalContent() {
             const body = document.getElementById('modalBody');
-            
+
             // Fetch saved instances
             let instances = [];
             try {
@@ -1121,13 +1233,13 @@
             body.innerHTML = `
                 <div class="modal-tabs">
                     <button class="modal-tab ${currentTab === 'form' ? 'active' : ''}" onclick="switchTab('form')">
-                        📝 Fill Out Form
+                        Fill Out Form
                     </button>
                     <button class="modal-tab ${currentTab === 'saved' ? 'active' : ''}" onclick="switchTab('saved')">
-                        💾 Saved (${instances.length})
+                        Saved (${instances.length})
                     </button>
                     <button class="modal-tab ${currentTab === 'schema' ? 'active' : ''}" onclick="switchTab('schema')">
-                        📋 Schema
+                        Schema
                     </button>
                 </div>
 
@@ -1150,7 +1262,7 @@
             currentTab = tab;
             document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
+
             document.querySelector(`.modal-tab:nth-child(${tab === 'form' ? 1 : tab === 'saved' ? 2 : 3})`).classList.add('active');
             document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
         }
@@ -1163,8 +1275,8 @@
             return `
                 <form id="templateForm" onsubmit="saveInstance(event)">
                     <div class="instance-name-input">
-                        <label for="instanceName">📌 Name this entry</label>
-                        <input type="text" id="instanceName" name="instanceName" 
+                        <label for="instanceName">Name this entry</label>
+                        <input type="text" id="instanceName" name="instanceName"
                                placeholder="e.g., Q1 Marketing Campaign, Website Redesign Project..."
                                value="${escapeHtml(instanceName)}" required>
                     </div>
@@ -1178,11 +1290,11 @@
 
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">
-                            ${currentInstance ? '💾 Update' : '✨ Save'}
+                            ${currentInstance ? 'Update' : 'Save'}
                         </button>
                         ${currentInstance ? `
                             <button type="button" class="btn btn-secondary" onclick="resetForm()">
-                                ➕ New Entry
+                                New Entry
                             </button>
                         ` : ''}
                         <button type="button" class="btn btn-secondary" onclick="closeModal()">
@@ -1201,7 +1313,7 @@
             let input = '';
             switch (field.type) {
                 case 'textarea':
-                    input = `<textarea id="${fieldId}" name="${fieldId}" 
+                    input = `<textarea id="${fieldId}" name="${fieldId}"
                                 ${field.required ? 'required' : ''}
                                 placeholder="Enter ${field.name.toLowerCase()}...">${escapeHtml(value)}</textarea>`;
                     break;
@@ -1214,18 +1326,18 @@
                     </select>`;
                     break;
                 case 'number':
-                    input = `<input type="number" id="${fieldId}" name="${fieldId}" 
+                    input = `<input type="number" id="${fieldId}" name="${fieldId}"
                                 value="${escapeHtml(value)}"
                                 ${field.required ? 'required' : ''}
                                 placeholder="Enter ${field.name.toLowerCase()}...">`;
                     break;
                 case 'date':
-                    input = `<input type="date" id="${fieldId}" name="${fieldId}" 
+                    input = `<input type="date" id="${fieldId}" name="${fieldId}"
                                 value="${escapeHtml(value)}"
                                 ${field.required ? 'required' : ''}>`;
                     break;
                 default:
-                    input = `<input type="text" id="${fieldId}" name="${fieldId}" 
+                    input = `<input type="text" id="${fieldId}" name="${fieldId}"
                                 value="${escapeHtml(value)}"
                                 ${field.required ? 'required' : ''}
                                 placeholder="Enter ${field.name.toLowerCase()}...">`;
@@ -1249,7 +1361,7 @@
                     <div class="no-instances">
                         <p>No saved entries yet</p>
                         <button class="btn btn-primary" onclick="switchTab('form')">
-                            ✨ Create your first entry
+                            Create your first entry
                         </button>
                     </div>
                 `;
@@ -1265,10 +1377,10 @@
                             </div>
                             <div class="instance-actions">
                                 <button class="btn-edit" onclick="editInstance(${instance.id})">
-                                    ✏️ Edit
+                                    Edit
                                 </button>
                                 <button class="btn-delete" onclick="deleteInstance(${instance.id})">
-                                    🗑️ Delete
+                                    Delete
                                 </button>
                             </div>
                         </div>
@@ -1307,7 +1419,7 @@
                         </table>
                     </div>
                 `).join('')}
-                
+
                 <button class="json-toggle" onclick="toggleJson()">View Raw JSON</button>
                 <div id="jsonPreview" style="display: none;">
                     <pre class="json-preview">${JSON.stringify(currentTemplate.template_json, null, 2)}</pre>
@@ -1318,7 +1430,7 @@
         // Save instance
         async function saveInstance(event) {
             event.preventDefault();
-            
+
             const form = document.getElementById('templateForm');
             const formData = new FormData(form);
             const instanceName = formData.get('instanceName');
