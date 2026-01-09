@@ -139,7 +139,7 @@ def init_db():
                 'color': '#4F46E5',
                 'is_public': True,
                 'template_json': json.dumps({
-                    'sections': [
+                    'steps': [
                         {
                             'name': 'Lead Context',
                             'fields': [
@@ -172,7 +172,7 @@ def init_db():
                 'color': '#EC4899',
                 'is_public': True,
                 'template_json': json.dumps({
-                    'sections': [
+                    'steps': [
                         {
                             'name': 'Customer Profile',
                             'fields': [
@@ -204,7 +204,7 @@ def init_db():
                 'color': '#10B981',
                 'is_public': True,
                 'template_json': json.dumps({
-                    'sections': [
+                    'steps': [
                         {
                             'name': 'Sprint Basics',
                             'fields': [
@@ -236,7 +236,7 @@ def init_db():
                 'color': '#F59E0B',
                 'is_public': True,
                 'template_json': json.dumps({
-                    'sections': [
+                    'steps': [
                         {
                             'name': 'Candidate Profile',
                             'fields': [
@@ -268,7 +268,7 @@ def init_db():
                 'color': '#8B5CF6',
                 'is_public': True,
                 'template_json': json.dumps({
-                    'sections': [
+                    'steps': [
                         {
                             'name': 'Ticket Intake',
                             'fields': [
@@ -300,7 +300,7 @@ def init_db():
                 'color': '#EF4444',
                 'is_public': True,
                 'template_json': json.dumps({
-                    'sections': [
+                    'steps': [
                         {
                             'name': 'Design Package',
                             'fields': [

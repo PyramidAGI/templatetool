@@ -1208,9 +1208,9 @@
                             <h3 class="template-name">${template.name}</h3>
                             <p class="template-description">${template.description}</p>
                             <div class="template-sections">
-                                <div class="template-sections-label">Sections included:</div>
+                                <div class="template-sections-label">Workflow Steps included:</div>
                                 <div class="section-tags">
-                                    ${template.template_json.sections.map(s => `
+                                    ${template.template_json.steps.map(s => `
                                         <span class="section-tag">${s.name}</span>
                                     `).join('')}
                                 </div>
@@ -1416,9 +1416,9 @@
         // Render schema view
         function renderSchema() {
             return `
-                ${currentTemplate.template_json.sections.map(section => `
+                ${currentTemplate.template_json.steps.map(step => `
                     <div class="section-block">
-                        <h3>${section.name}</h3>
+                        <h3>${step.name}</h3>
                         <table class="fields-table">
                             <thead>
                                 <tr>
@@ -1429,7 +1429,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${section.fields.map(field => `
+                                ${step.fields.map(field => `
                                     <tr>
                                         <td>${field.name}</td>
                                         <td><span class="field-type">${field.type}</span></td>
@@ -1461,11 +1461,11 @@
 
             // Build data structure
             const dataJson = {};
-            currentTemplate.template_json.sections.forEach(section => {
-                dataJson[section.name] = {};
-                section.fields.forEach(field => {
-                    const fieldId = `field_${section.name}_${field.name}`.replace(/\s+/g, '_');
-                    dataJson[section.name][field.name] = formData.get(fieldId) || '';
+            currentTemplate.template_json.steps.forEach(step => {
+                dataJson[step.name] = {};
+                step.fields.forEach(field => {
+                    const fieldId = `field_${step.name}_${field.name}`.replace(/\s+/g, '_');
+                    dataJson[step.name][field.name] = formData.get(fieldId) || '';
                 });
             });
 
