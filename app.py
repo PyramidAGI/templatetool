@@ -132,40 +132,32 @@ def init_db():
         sample_templates = [
             {
                 'user_id': demo_user_id,
-                'name': 'Project Management',
-                'description': 'Track tasks, milestones, and team progress for any project',
-                'category': 'Business',
-                'icon': '📊',
+                'name': 'Sales Rep: Discovery Call',
+                'description': 'Step-by-step discovery workflow for a sales representative',
+                'category': 'Sales',
+                'icon': '☎️',
                 'color': '#4F46E5',
                 'is_public': True,
                 'template_json': json.dumps({
                     'sections': [
                         {
-                            'name': 'Project Overview',
+                            'name': 'Lead Context',
                             'fields': [
-                                {'name': 'Project Name', 'type': 'text', 'required': True},
-                                {'name': 'Start Date', 'type': 'date', 'required': True},
-                                {'name': 'End Date', 'type': 'date', 'required': True},
-                                {'name': 'Project Manager', 'type': 'text', 'required': True},
-                                {'name': 'Budget', 'type': 'number', 'required': False}
+                                {'name': 'Lead Name', 'type': 'text', 'required': True},
+                                {'name': 'Company', 'type': 'text', 'required': True},
+                                {'name': 'Role', 'type': 'text', 'required': True},
+                                {'name': 'Discovery Call Date', 'type': 'date', 'required': True},
+                                {'name': 'Primary Pain Point', 'type': 'textarea', 'required': True}
                             ]
                         },
                         {
-                            'name': 'Tasks',
+                            'name': 'Qualification Notes',
                             'fields': [
-                                {'name': 'Task Name', 'type': 'text', 'required': True},
-                                {'name': 'Assignee', 'type': 'text', 'required': True},
-                                {'name': 'Due Date', 'type': 'date', 'required': True},
-                                {'name': 'Status', 'type': 'select', 'options': ['Not Started', 'In Progress', 'Completed'], 'required': True},
-                                {'name': 'Priority', 'type': 'select', 'options': ['Low', 'Medium', 'High'], 'required': True}
-                            ]
-                        },
-                        {
-                            'name': 'Milestones',
-                            'fields': [
-                                {'name': 'Milestone Name', 'type': 'text', 'required': True},
-                                {'name': 'Target Date', 'type': 'date', 'required': True},
-                                {'name': 'Description', 'type': 'textarea', 'required': False}
+                                {'name': 'Need', 'type': 'textarea', 'required': True},
+                                {'name': 'Budget', 'type': 'text', 'required': False},
+                                {'name': 'Timeline', 'type': 'text', 'required': True},
+                                {'name': 'Decision Process', 'type': 'textarea', 'required': False},
+                                {'name': 'Next Step', 'type': 'text', 'required': True}
                             ]
                         }
                     ]
@@ -173,40 +165,31 @@ def init_db():
             },
             {
                 'user_id': demo_user_id,
-                'name': 'Marketing Campaign',
-                'description': 'Plan and execute marketing campaigns with tracking metrics',
-                'category': 'Marketing',
-                'icon': '📣',
+                'name': 'Customer Success: Onboarding Kickoff',
+                'description': 'Workflow step for a CSM to launch a new customer onboarding',
+                'category': 'Customer Success',
+                'icon': '🤝',
                 'color': '#EC4899',
                 'is_public': True,
                 'template_json': json.dumps({
                     'sections': [
                         {
-                            'name': 'Campaign Details',
+                            'name': 'Customer Profile',
                             'fields': [
-                                {'name': 'Campaign Name', 'type': 'text', 'required': True},
-                                {'name': 'Objective', 'type': 'textarea', 'required': True},
-                                {'name': 'Target Audience', 'type': 'text', 'required': True},
-                                {'name': 'Budget', 'type': 'number', 'required': True},
-                                {'name': 'Start Date', 'type': 'date', 'required': True},
-                                {'name': 'End Date', 'type': 'date', 'required': True}
+                                {'name': 'Account Name', 'type': 'text', 'required': True},
+                                {'name': 'Primary Contact', 'type': 'text', 'required': True},
+                                {'name': 'Kickoff Date', 'type': 'date', 'required': True},
+                                {'name': 'Implementation Goal', 'type': 'textarea', 'required': True},
+                                {'name': 'Stakeholders', 'type': 'textarea', 'required': False}
                             ]
                         },
                         {
-                            'name': 'Channels',
+                            'name': 'Onboarding Plan',
                             'fields': [
-                                {'name': 'Channel Name', 'type': 'select', 'options': ['Social Media', 'Email', 'PPC', 'Content', 'SEO'], 'required': True},
-                                {'name': 'Budget Allocation', 'type': 'number', 'required': True},
-                                {'name': 'KPIs', 'type': 'textarea', 'required': False}
-                            ]
-                        },
-                        {
-                            'name': 'Content Calendar',
-                            'fields': [
-                                {'name': 'Content Title', 'type': 'text', 'required': True},
-                                {'name': 'Publish Date', 'type': 'date', 'required': True},
-                                {'name': 'Platform', 'type': 'text', 'required': True},
-                                {'name': 'Status', 'type': 'select', 'options': ['Draft', 'Review', 'Scheduled', 'Published'], 'required': True}
+                                {'name': 'Milestones', 'type': 'textarea', 'required': True},
+                                {'name': 'Internal Owner', 'type': 'text', 'required': True},
+                                {'name': 'Dependencies', 'type': 'textarea', 'required': False},
+                                {'name': 'Risks', 'type': 'textarea', 'required': False}
                             ]
                         }
                     ]
@@ -214,30 +197,31 @@ def init_db():
             },
             {
                 'user_id': demo_user_id,
-                'name': 'Product Roadmap',
-                'description': 'Plan product features, releases, and long-term vision',
+                'name': 'Product Manager: Sprint Planning',
+                'description': 'Planning workflow step for a product manager to align a sprint',
                 'category': 'Product',
-                'icon': '🗺️',
+                'icon': '🧭',
                 'color': '#10B981',
                 'is_public': True,
                 'template_json': json.dumps({
                     'sections': [
                         {
-                            'name': 'Product Vision',
+                            'name': 'Sprint Basics',
                             'fields': [
-                                {'name': 'Product Name', 'type': 'text', 'required': True},
-                                {'name': 'Vision Statement', 'type': 'textarea', 'required': True},
-                                {'name': 'Target Market', 'type': 'text', 'required': True}
+                                {'name': 'Sprint Name', 'type': 'text', 'required': True},
+                                {'name': 'Start Date', 'type': 'date', 'required': True},
+                                {'name': 'End Date', 'type': 'date', 'required': True},
+                                {'name': 'Sprint Goal', 'type': 'textarea', 'required': True},
+                                {'name': 'Capacity (points)', 'type': 'number', 'required': False}
                             ]
                         },
                         {
-                            'name': 'Features',
+                            'name': 'Stories Committed',
                             'fields': [
-                                {'name': 'Feature Name', 'type': 'text', 'required': True},
-                                {'name': 'Description', 'type': 'textarea', 'required': True},
-                                {'name': 'Priority', 'type': 'select', 'options': ['Must Have', 'Should Have', 'Nice to Have'], 'required': True},
-                                {'name': 'Quarter', 'type': 'select', 'options': ['Q1', 'Q2', 'Q3', 'Q4'], 'required': True},
-                                {'name': 'Status', 'type': 'select', 'options': ['Planned', 'In Development', 'Testing', 'Released'], 'required': True}
+                                {'name': 'Story Title', 'type': 'text', 'required': True},
+                                {'name': 'Priority', 'type': 'select', 'options': ['P0', 'P1', 'P2'], 'required': True},
+                                {'name': 'Owner', 'type': 'text', 'required': True},
+                                {'name': 'Definition of Done', 'type': 'textarea', 'required': False}
                             ]
                         }
                     ]
@@ -245,41 +229,31 @@ def init_db():
             },
             {
                 'user_id': demo_user_id,
-                'name': 'Event Planning',
-                'description': 'Organize events with venue, guest lists, and schedules',
-                'category': 'Events',
-                'icon': '🎉',
+                'name': 'Recruiter: Candidate Screen',
+                'description': 'Screening workflow step for a recruiter to qualify a candidate',
+                'category': 'People',
+                'icon': '🧑‍💼',
                 'color': '#F59E0B',
                 'is_public': True,
                 'template_json': json.dumps({
                     'sections': [
                         {
-                            'name': 'Event Details',
+                            'name': 'Candidate Profile',
                             'fields': [
-                                {'name': 'Event Name', 'type': 'text', 'required': True},
-                                {'name': 'Event Type', 'type': 'select', 'options': ['Conference', 'Workshop', 'Webinar', 'Social', 'Other'], 'required': True},
-                                {'name': 'Date', 'type': 'date', 'required': True},
-                                {'name': 'Location', 'type': 'text', 'required': True},
-                                {'name': 'Expected Attendees', 'type': 'number', 'required': True},
-                                {'name': 'Budget', 'type': 'number', 'required': False}
+                                {'name': 'Candidate Name', 'type': 'text', 'required': True},
+                                {'name': 'Role', 'type': 'text', 'required': True},
+                                {'name': 'Source', 'type': 'text', 'required': False},
+                                {'name': 'Screen Date', 'type': 'date', 'required': True},
+                                {'name': 'Location', 'type': 'text', 'required': False}
                             ]
                         },
                         {
-                            'name': 'Agenda',
+                            'name': 'Screen Outcome',
                             'fields': [
-                                {'name': 'Session Title', 'type': 'text', 'required': True},
-                                {'name': 'Start Time', 'type': 'text', 'required': True},
-                                {'name': 'Duration (minutes)', 'type': 'number', 'required': True},
-                                {'name': 'Speaker', 'type': 'text', 'required': False}
-                            ]
-                        },
-                        {
-                            'name': 'Vendors',
-                            'fields': [
-                                {'name': 'Vendor Name', 'type': 'text', 'required': True},
-                                {'name': 'Service', 'type': 'text', 'required': True},
-                                {'name': 'Cost', 'type': 'number', 'required': True},
-                                {'name': 'Contact', 'type': 'text', 'required': False}
+                                {'name': 'Motivation', 'type': 'textarea', 'required': True},
+                                {'name': 'Skills Match', 'type': 'textarea', 'required': True},
+                                {'name': 'Comp Expectations', 'type': 'text', 'required': False},
+                                {'name': 'Next Step', 'type': 'select', 'options': ['Advance', 'Hold', 'Reject'], 'required': True}
                             ]
                         }
                     ]
@@ -287,31 +261,31 @@ def init_db():
             },
             {
                 'user_id': demo_user_id,
-                'name': 'Content Strategy',
-                'description': 'Plan and manage content creation and publishing',
-                'category': 'Marketing',
-                'icon': '✍️',
+                'name': 'Support Agent: Ticket Triage',
+                'description': 'Triage workflow step for a support agent to route new tickets',
+                'category': 'Support',
+                'icon': '🛠️',
                 'color': '#8B5CF6',
                 'is_public': True,
                 'template_json': json.dumps({
                     'sections': [
                         {
-                            'name': 'Strategy Overview',
+                            'name': 'Ticket Intake',
                             'fields': [
-                                {'name': 'Content Goal', 'type': 'textarea', 'required': True},
-                                {'name': 'Target Audience', 'type': 'text', 'required': True},
-                                {'name': 'Key Topics', 'type': 'textarea', 'required': True},
-                                {'name': 'Tone of Voice', 'type': 'text', 'required': False}
+                                {'name': 'Ticket ID', 'type': 'text', 'required': True},
+                                {'name': 'Customer', 'type': 'text', 'required': True},
+                                {'name': 'Channel', 'type': 'select', 'options': ['Email', 'Chat', 'Phone', 'Web'], 'required': True},
+                                {'name': 'Issue Summary', 'type': 'textarea', 'required': True},
+                                {'name': 'Severity', 'type': 'select', 'options': ['Low', 'Medium', 'High', 'Urgent'], 'required': True}
                             ]
                         },
                         {
-                            'name': 'Content Pieces',
+                            'name': 'Routing',
                             'fields': [
-                                {'name': 'Title', 'type': 'text', 'required': True},
-                                {'name': 'Type', 'type': 'select', 'options': ['Blog Post', 'Video', 'Infographic', 'Podcast', 'Social Post'], 'required': True},
-                                {'name': 'Author', 'type': 'text', 'required': True},
-                                {'name': 'Due Date', 'type': 'date', 'required': True},
-                                {'name': 'Status', 'type': 'select', 'options': ['Idea', 'Writing', 'Editing', 'Ready', 'Published'], 'required': True}
+                                {'name': 'Category', 'type': 'text', 'required': True},
+                                {'name': 'Assigned Team', 'type': 'text', 'required': True},
+                                {'name': 'SLA Tier', 'type': 'select', 'options': ['Standard', 'Priority', 'Premium'], 'required': True},
+                                {'name': 'First Response Sent', 'type': 'select', 'options': ['Yes', 'No'], 'required': True}
                             ]
                         }
                     ]
@@ -319,26 +293,30 @@ def init_db():
             },
             {
                 'user_id': demo_user_id,
-                'name': 'Bug Tracker',
-                'description': 'Track and manage software bugs and issues',
-                'category': 'Development',
-                'icon': '🐛',
+                'name': 'Designer: Handoff Review',
+                'description': 'Handoff workflow step for a designer to align with engineering',
+                'category': 'Design',
+                'icon': '🎨',
                 'color': '#EF4444',
                 'is_public': True,
                 'template_json': json.dumps({
                     'sections': [
                         {
-                            'name': 'Bug Report',
+                            'name': 'Design Package',
                             'fields': [
-                                {'name': 'Bug Title', 'type': 'text', 'required': True},
-                                {'name': 'Description', 'type': 'textarea', 'required': True},
-                                {'name': 'Steps to Reproduce', 'type': 'textarea', 'required': True},
-                                {'name': 'Expected Behavior', 'type': 'textarea', 'required': True},
-                                {'name': 'Actual Behavior', 'type': 'textarea', 'required': True},
-                                {'name': 'Severity', 'type': 'select', 'options': ['Critical', 'High', 'Medium', 'Low'], 'required': True},
-                                {'name': 'Status', 'type': 'select', 'options': ['Open', 'In Progress', 'Fixed', 'Closed', 'Won\'t Fix'], 'required': True},
-                                {'name': 'Assigned To', 'type': 'text', 'required': False},
-                                {'name': 'Environment', 'type': 'text', 'required': False}
+                                {'name': 'Feature', 'type': 'text', 'required': True},
+                                {'name': 'Design Link', 'type': 'text', 'required': True},
+                                {'name': 'Assets Included', 'type': 'textarea', 'required': False},
+                                {'name': 'Spec Status', 'type': 'select', 'options': ['Draft', 'Ready', 'Final'], 'required': True},
+                                {'name': 'Review Date', 'type': 'date', 'required': True}
+                            ]
+                        },
+                        {
+                            'name': 'Engineering Notes',
+                            'fields': [
+                                {'name': 'Implementation Notes', 'type': 'textarea', 'required': False},
+                                {'name': 'Open Questions', 'type': 'textarea', 'required': False},
+                                {'name': 'Sign-off', 'type': 'select', 'options': ['Pending', 'Approved'], 'required': True}
                             ]
                         }
                     ]
